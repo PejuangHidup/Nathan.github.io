@@ -1,0 +1,147 @@
+#include <Wire.h>
+
+#include <LiquidCrystal_I2C.h>
+
+// Inisialisasi LCD dengan alamat I2C 0x27 untuk layar 16x2
+
+// Alamat 0x27 
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// --- Lirik Lagu dan Pengaturan Tempo ---
+
+// Lirik lagu disimpan dalam array. Setiap baris dipecah menjadi 2
+
+// agar muat di layar 16x2 (baris 1 dan baris 2 LCD).
+
+// Jika satu baris lirik pendek, baris kedua dikosongkan ("").
+
+String lirik_baris1[] = {
+
+ "Pelangi-pelangi",
+
+ "Alangkah indahmu",
+
+ "Merah kuning",
+
+ "Di langit",
+
+ "Pelukismu agung",
+
+ "Siapa gerangan",
+"Pelangi-pelangi",
+
+ "Ciptaan Tuhan"
+
+};
+
+String lirik_baris2[] = {
+
+ "",
+
+ "",
+
+ "hijau",
+
+ "yang biru",
+
+ "",
+
+ "",
+
+ "",
+
+ ""
+
+};
+
+// Tempo (durasi tampilan setiap baris lirik) dalam milidetik (ms).
+
+// 1000 ms = 1 detik. Sesuaikan angka ini untuk mengubah kecepatan.
+
+int tempo[] = {
+
+ 2500, // Durasi untuk "Pelangi-pelangi"
+
+ 2500, // Durasi untuk "Alangkah indahmu"
+
+ 2000, // Durasi untuk "Merah kuning hijau"
+
+ 2500, // Durasi untuk "Di langit yang biru"
+
+ 2500, // Durasi untuk "Pelukismu agung"
+
+ 2500, // Durasi untuk "Siapa gerangan"
+
+ 2500, // Durasi untuk "Pelangi-pelangi"
+
+ 3000 // Durasi untuk "Ciptaan Tuhan"
+
+};
+
+// Hitung jumlah baris lirik secara otomatis
+
+int jumlahLirik = sizeof(lirik_baris1) / sizeof(lirik_baris1[0]);
+
+void setup() {
+
+ // Memulai LCD
+
+ lcd.init();
+
+ // Menyalakan lampu latar (backlight) LCD
+
+ lcd.backlight();
+
+ // Pesan pembuka saat simulasi dimulai
+
+ lcd.setCursor(0, 0); // Pindah kursor ke kolom 0, baris 0
+
+ lcd.print("Lagu Dimulai...");
+
+ lcd.setCursor(0, 1); // Pindah kursor ke kolom 0, baris 1
+
+ lcd.print("Pelangi-Pelangi");
+
+ delay(2000); // Tahan selama 2 detik
+}
+
+void loop() {
+
+ // Ulangi untuk setiap baris lirik
+
+ for (int i = 0; i < jumlahLirik; i++) {
+
+ // Bersihkan layar sebelum menampilkan lirik baru
+
+ lcd.clear();
+
+ // Tampilkan lirik untuk baris pertama LCD
+
+ lcd.setCursor(0, 0);
+
+ lcd.print(lirik_baris1[i]);
+
+ // Tampilkan lirik untuk baris kedua LCD
+
+ lcd.setCursor(0, 1);
+
+ lcd.print(lirik_baris2[i]);
+
+ // Tunggu sesuai dengan tempo yang telah ditentukan
+
+ delay(tempo[i]);
+
+ }
+
+ // Jeda sejenak setelah lagu selesai sebelum mengulang
+
+ lcd.clear();
+
+ lcd.setCursor(0, 0);
+
+ lcd.print("Lagu Selesai");
+
+ delay(4000); // Jeda 4 detik
+
+}
